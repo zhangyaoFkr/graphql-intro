@@ -1,12 +1,14 @@
 {
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "graphql": "^14.1.1"
+    "express-graphql": "^0.7.1",
+    "graphql": "^14.1.1",
+    "graphql-tools": "^4.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",

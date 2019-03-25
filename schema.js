@@ -1,49 +1,41 @@
-import {
-  GraphQLObjectType,
-  GraphQLSchema,
-  GraphQLInt,
-  GraphQLString
-} from "graphql/type";
+import { makeExecutableSchema } from 'graphql-tools';
 
+const schemaString = `
+type Query {
+  name: String
+  count: Int
+}
+
+type Mutation {
+  updateCount(num: Int): Int
+}
+`;
+
+function getName() {
+  return 'Hello world';
+}
 let count = 0;
-setInterval(() => console.log(count), 2000);
+function getCount() {
+  return count;
+}
 
-let schema = new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: "RootQueryType",
-    fields: {
-      count: {
-        type: GraphQLInt,
-        description: 'This is the count',
-        resolve: function() {
-          return count;
-        }
-      },
-      name: {
-        type: GraphQLString,
-        resolve: function() {
-          return "hello world";
-        }
+const resolvers =  {
+  Query: {
+    name: () => getName(),
+    count: () => getCount()
+  },
+  Mutation: {
+    updateCount: (root, { num }) => {
+      if (typeof num === "number") {
+        count = num;
+        return count;
       }
+      return count += 1;
     }
-  }),
-  mutation: new GraphQLObjectType({
-    name: 'RootMutationType',
-    fields: {
-      updateCount: {
-        type: GraphQLInt,
-        description: 'Updates the count',
-        resolve: function() {
-          count += 1;
-          return count;
-        }
-      }
-    }
-  })
+  }
+};
+
+export default makeExecutableSchema({
+  typeDefs: [schemaString],
+  resolvers
 });
-
-export default schema;
-// curl -XPOST -H "Content-Type:application/graphql"  -d 'query RootQueryType { count }' http://localhost:3000/graphql
-// curl -XPOST -H 'Content-Type:application/graphql'  -d '{ count }' 
-
-// curl -XPOST -H 'Content-Type:application/graphql'  -d '{__schema { queryType { name, fields { name, description, type{name, description}, isDeprecated, deprecationReason }}}}' http://localhost:3000/graphql
