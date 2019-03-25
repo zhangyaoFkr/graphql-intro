@@ -6,11 +6,10 @@ import {
 } from "graphql/type";
 
 let count = 0;
-setInterval(() => console.log(count), 2000);
 
 let schema = new GraphQLSchema({
   query: new GraphQLObjectType({
-    name: "RootQueryType",
+    name: "getData",
     fields: {
       count: {
         type: GraphQLInt,
@@ -28,9 +27,9 @@ let schema = new GraphQLSchema({
     }
   }),
   mutation: new GraphQLObjectType({
-    name: 'RootMutationType',
+    name: 'updateCount',
     fields: {
-      updateCount: {
+      count: {
         type: GraphQLInt,
         description: 'Updates the count',
         resolve: function() {
@@ -43,7 +42,9 @@ let schema = new GraphQLSchema({
 });
 
 export default schema;
-// curl -XPOST -H "Content-Type:application/graphql"  -d 'query RootQueryType { count }' http://localhost:3000/graphql
-// curl -XPOST -H 'Content-Type:application/graphql'  -d '{ count }' 
+
+// curl -XPOST -H "Content-Type:application/graphql"  -d 'query getData { count name }' http://localhost:3000/graphql
+
+// curl -XPOST -H 'Content-Type:application/graphql'  -d 'mutation updateCount { count }' http://localhost:3000/graphql
 
 // curl -XPOST -H 'Content-Type:application/graphql'  -d '{__schema { queryType { name, fields { name, description, type{name, description}, isDeprecated, deprecationReason }}}}' http://localhost:3000/graphql

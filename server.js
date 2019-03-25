@@ -11,10 +11,8 @@ app.use(bodyParser.text({ type: 'application/graphql' }));
 
 app.post('/graphql', (req, res) => {
   // execute GraphQL!
-  console.log(req.body)
   graphql(schema, req.body)
   .then((result) => {
-      console.log(result)
     res.send(JSON.stringify(result, null, 2));
   });
 });
